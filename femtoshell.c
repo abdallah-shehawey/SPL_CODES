@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int femtoshell_main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     char line[11000];
     const char *prompt = "FemtoShell> ";
     int last_status = 0;
@@ -42,7 +42,7 @@ int femtoshell_main(int argc, char *argv[]) {
         }
 
         printf("Invalid command\n");
-        last_status = 1; // فشل
+        last_status = 1;
     }
 
     return last_status;
