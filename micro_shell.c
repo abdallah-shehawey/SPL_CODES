@@ -24,7 +24,6 @@ typedef struct
 Variable vars[MAX_VARS];
 int var_count = 0;
 
-
 char *find_variable(const char *name)
 {
     for (int i = 0; i < var_count; i++)
@@ -36,7 +35,6 @@ char *find_variable(const char *name)
     }
     return NULL;
 }
-
 
 void set_variable(const char *name, const char *value)
 {
@@ -57,7 +55,6 @@ void set_variable(const char *name, const char *value)
     }
 }
 
-
 void substitute_variables(char *arg, char *result, int max_len)
 {
     char *out = result;
@@ -75,10 +72,12 @@ void substitute_variables(char *arg, char *result, int max_len)
             }
             var_name[j] = '\0';
             char *var_value = find_variable(var_name);
-            if (var_value) {
+            if (var_value)
+            {
                 size_t len = strlen(var_value);
                 size_t space = max_len - (out - result) - 1;
-                if (len > space) len = space;
+                if (len > space)
+                    len = space;
                 memcpy(out, var_value, len);
                 out += len;
             }
@@ -91,10 +90,12 @@ void substitute_variables(char *arg, char *result, int max_len)
     *out = '\0';
 }
 
-
-int build_args(char **tokens, int token_count, char **args) {
+// build_args(tokens, token_count, args);
+int build_args(char **tokens, int token_count, char **args)
+{
     int arg_count = 0;
-    for (int i = 0; i < token_count; ) {
+    for (int i = 0; i < token_count;)
+    {
         if (strcmp(tokens[i], "<") == 0 || strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], "2>") == 0)
         {
             char *op = tokens[i];
@@ -115,17 +116,20 @@ int build_args(char **tokens, int token_count, char **args) {
     return arg_count;
 }
 
-
 int apply_redirections(char **tokens, int token_count, int is_builtin)
 {
-    for (int i = 0; i < token_count; )
+    for (int i = 0; i < token_count;)
     {
         if (strcmp(tokens[i], "<") == 0)
         {
             i++;
-            if (i >= token_count) {
+            if (i >= token_count)
+            {
                 fprintf(stderr, "missing file after '<'\n");
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             char res[256];
             substitute_variables(tokens[i], res, sizeof(res));
@@ -133,23 +137,33 @@ int apply_redirections(char **tokens, int token_count, int is_builtin)
             if (fd == -1)
             {
                 fprintf(stderr, "cannot access %s: No such file or directory\n", res);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             if (dup2(fd, STDIN_FILENO) == -1)
             {
                 perror("dup2 input");
                 close(fd);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             close(fd);
             i++;
-        } else if (strcmp(tokens[i], ">") == 0)
+        }
+        else if (strcmp(tokens[i], ">") == 0)
         {
             i++;
             if (i >= token_count)
             {
                 fprintf(stderr, "missing file after '>'\n");
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             char res[256];
             substitute_variables(tokens[i], res, sizeof(res));
@@ -157,23 +171,33 @@ int apply_redirections(char **tokens, int token_count, int is_builtin)
             if (fd == -1)
             {
                 fprintf(stderr, "%s: Permission denied\n", res);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             if (dup2(fd, STDOUT_FILENO) == -1)
             {
                 perror("dup2 output");
                 close(fd);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             close(fd);
             i++;
-        } else if (strcmp(tokens[i], "2>") == 0)
+        }
+        else if (strcmp(tokens[i], "2>") == 0)
         {
             i++;
             if (i >= token_count)
             {
                 fprintf(stderr, "missing file after '2>'\n");
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             char res[256];
             substitute_variables(tokens[i], res, sizeof(res));
@@ -181,13 +205,19 @@ int apply_redirections(char **tokens, int token_count, int is_builtin)
             if (fd == -1)
             {
                 fprintf(stderr, "%s: Permission denied\n", res);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             if (dup2(fd, STDERR_FILENO) == -1)
             {
                 perror("dup2 error");
                 close(fd);
-                if (is_builtin) return -1; else exit(1);
+                if (is_builtin)
+                    return -1;
+                else
+                    exit(1);
             }
             close(fd);
             i++;
@@ -200,7 +230,7 @@ int apply_redirections(char **tokens, int token_count, int is_builtin)
     return 0;
 }
 
-int microshell_main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     (void)argc;
     (void)argv;
@@ -227,13 +257,15 @@ int microshell_main(int argc, char *argv[])
 
         int token_count = 0;
         char *token = strtok(input, " \t");
-        while (token && token_count < MAX_ARGS - 1) {
+        while (token && token_count < MAX_ARGS - 1)
+        {
             tokens[token_count++] = token;
             token = strtok(NULL, " \t");
         }
         tokens[token_count] = NULL;
 
-        if (token_count == 0) {
+        if (token_count == 0)
+        {
             continue;
         }
 
@@ -274,22 +306,27 @@ int microshell_main(int argc, char *argv[])
 
         if (strcmp(args[0], "echo") == 0 || strcmp(args[0], "pwd") == 0 ||
             strcmp(args[0], "cd") == 0 || strcmp(args[0], "export") == 0)
-            {
+        {
             is_builtin = 1;
             save_in = dup(STDIN_FILENO);
             save_out = dup(STDOUT_FILENO);
             save_err = dup(STDERR_FILENO);
-            if (apply_redirections(tokens, token_count, 1) == -1) {
+            if (apply_redirections(tokens, token_count, 1) == -1)
+            {
                 status = 1;
-            } else {
+            }
+            else
+            {
                 // Execute built-in
-                if (strcmp(args[0], "echo") == 0) {
+                if (strcmp(args[0], "echo") == 0)
+                {
                     for (int j = 1; j < arg_count; j++)
                     {
                         char result[256];
                         substitute_variables(args[j], result, sizeof(result));
                         printf("%s", result);
-                        if (j < arg_count - 1) printf(" ");
+                        if (j < arg_count - 1)
+                            printf(" ");
                     }
                     printf("\n");
                     status = 0;
@@ -313,7 +350,8 @@ int microshell_main(int argc, char *argv[])
                     char *dir = arg_count > 1 ? args[1] : getenv("HOME");
                     char resolved_dir[256];
                     substitute_variables(dir, resolved_dir, sizeof(resolved_dir));
-                    if (chdir(resolved_dir) != 0) {
+                    if (chdir(resolved_dir) != 0)
+                    {
                         fprintf(stderr, "cd: %s: No such file or directory\n", resolved_dir);
                         status = 1;
                     }
@@ -336,9 +374,12 @@ int microshell_main(int argc, char *argv[])
                     status = 0;
                 }
             }
-            dup2(save_in, STDIN_FILENO); close(save_in);
-            dup2(save_out, STDOUT_FILENO); close(save_out);
-            dup2(save_err, STDERR_FILENO); close(save_err);
+            dup2(save_in, STDIN_FILENO);
+            close(save_in);
+            dup2(save_out, STDOUT_FILENO);
+            close(save_out);
+            dup2(save_err, STDERR_FILENO);
+            close(save_err);
             continue;
         }
 

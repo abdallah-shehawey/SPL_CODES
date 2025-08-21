@@ -2,39 +2,49 @@
 #include <string.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     char line[11000];
     const char *prompt = "FemtoShell> ";
     int last_status = 0;
 
-    while (1) {
+    while (1)
+    {
         printf("%s", prompt);
         fflush(stdout);
 
-        if (fgets(line, sizeof(line), stdin) == NULL) {
+        if (fgets(line, sizeof(line), stdin) == NULL)
+        {
             break;
         }
 
         size_t len = strlen(line);
-        if (len > 0 && line[len - 1] == '\n') {
+        if (len > 0 && line[len - 1] == '\n')
+        {
             line[len - 1] = '\0';
             len--;
         }
 
-        if (len == 0) {
+        if (len == 0)
+        {
             last_status = 0;
             continue;
         }
 
-        if (strcmp(line, "exit") == 0) {
+        if (strcmp(line, "exit") == 0)
+        {
             printf("Good Bye\n");
             return 0;
         }
 
-        if (strncmp(line, "echo", 4) == 0 && (line[4] == ' ' || line[4] == '\0')) {
-            if (line[4] == ' ') {
+        if (strncmp(line, "echo", 4) == 0 && (line[4] == ' ' || line[4] == '\0'))
+        {
+            if (line[4] == ' ')
+            {
                 printf("%s\n", line + 5);
-            } else {
+            }
+            else
+            {
                 printf("\n");
             }
             last_status = 0;
@@ -47,4 +57,3 @@ int main(int argc, char *argv[]) {
 
     return last_status;
 }
-

@@ -51,7 +51,8 @@ static void free_args(char **argv, int argc)
 
 int main(int argc, char *argv[])
 {
-    (void)argc; (void)argv;
+    (void)argc;
+    (void)argv;
     char *line = NULL;
     size_t len = 0;
     ssize_t nread;
@@ -87,7 +88,8 @@ int main(int argc, char *argv[])
             for (int i = 1; i < cmd_argc; i++)
             {
                 printf("%s", cmd_argv[i]);
-                if (i < cmd_argc - 1) printf(" ");
+                if (i < cmd_argc - 1)
+                    printf(" ");
             }
             printf("\n");
             last_status = 0;
@@ -158,4 +160,3 @@ int main(int argc, char *argv[])
     free(line);
     return last_status;
 }
-

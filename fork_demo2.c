@@ -9,7 +9,7 @@ int main(void)
 
 	if (pid > 0)
 	{
-		while(1)
+		while (1)
 		{
 			printf("PARENT: my pid = %d, My child pid = %d\n", getpid(), pid);
 			usleep(500000);
@@ -17,10 +17,10 @@ int main(void)
 	}
 	else if (pid == 0)
 	{
-		
-		while(1)
+
+		while (1)
 		{
-			
+
 			printf("CHILD: my pid = %d, My Parent pid = %d\n", getpid(), getppid());
 			usleep(500000);
 		}
@@ -32,5 +32,4 @@ int main(void)
 
 	getchar();
 	return 0;
-
 }

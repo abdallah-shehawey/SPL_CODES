@@ -5,7 +5,7 @@
 
 #define COUNT 100
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	char buff[COUNT];
 	int numread;
@@ -27,21 +27,19 @@ int main(int argc, char* argv[])
 	if (fd_2 < 0)
 	{
 		printf("Couldn't create a file \n");
-                exit(-4);
-
+		exit(-4);
 	}
 
-	while((numread = read(fd_1, buff, COUNT)) > 0)
+	while ((numread = read(fd_1, buff, COUNT)) > 0)
 	{
 		if (write(fd_2, buff, numread) < 0)
 		{
 			printf("write failed\n");
 			exit(-3);
 		}
-
 	}
 	close(fd_1);
 	close(fd_2);
-	
+
 	return 0;
 }
